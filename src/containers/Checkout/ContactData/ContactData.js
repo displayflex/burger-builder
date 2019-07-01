@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import Button from '../../../components/UI/Button/Button';
 import axios from '../../../axios-orders';
@@ -80,10 +81,7 @@ class ContactData extends Component {
 			deliveryMethod: {
 				elementType: `select`,
 				elementConfig: {
-					options: [
-						{ value: `fastest`, displayValue: `Fastest` },
-						{ value: `cheapest`, displayValue: `Cheapest` }
-					]
+					options: [{ value: `fastest`, displayValue: `Fastest` }, { value: `cheapest`, displayValue: `Cheapest` }]
 				},
 				value: `fastest`,
 				validation: {},
@@ -101,13 +99,11 @@ class ContactData extends Component {
 
 		const formData = {};
 		for (let formElementIdentifier in this.state.orderForm) {
-			formData[formElementIdentifier] = this.state.orderForm[
-				formElementIdentifier
-			].value;
+			formData[formElementIdentifier] = this.state.orderForm[formElementIdentifier].value;
 		}
 
 		const order = {
-			ingredients: this.props.ingredients,
+			ingredients: this.props.ings,
 			price: this.props.price,
 			orderData: formData
 		};
@@ -157,10 +153,7 @@ class ContactData extends Component {
 			...updatedOrderForm[inputIdentifier]
 		};
 		updatedFormElement.value = evt.target.value;
-		updatedFormElement.valid = this.checkValidity(
-			updatedFormElement.value,
-			updatedFormElement.validation
-		);
+		updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
 		updatedFormElement.touched = true;
 		updatedOrderForm[inputIdentifier] = updatedFormElement;
 
@@ -218,4 +211,11 @@ class ContactData extends Component {
 	}
 }
 
-export default ContactData;
+const mapStateToProps = (state) => {
+	return {
+		ings: state.ingredients,
+		price: state.totalPrice
+	}
+}
+
+export default connect(mapStateToProps)(ContactData);
