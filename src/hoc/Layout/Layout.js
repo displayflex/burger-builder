@@ -1,38 +1,49 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
-import Aux from '../Auxiliary/Auxiliary';
-import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
-import SideDrawer from '../../components/Navigation/SideDrawer/SideDrawer';
+import Aux from '../Auxiliary/Auxiliary'
+import Toolbar from '../../components/Navigation/Toolbar/Toolbar'
+import SideDrawer from '../../components/Navigation/SideDrawer/SideDrawer'
 
-import classes from './Layout.module.css';
+import classes from './Layout.module.css'
 
 class Layout extends Component {
-	state = {
-		showSideDrawer: false
-	};
+  state = {
+    showSideDrawer: false,
+  }
 
-	sideDrawerCloseHandler = () => {
-		this.setState({ showSideDrawer: false });
-	};
+  sideDrawerCloseHandler = () => {
+    this.setState({ showSideDrawer: false })
+  }
 
-	sideDrawerToggleHandler = () => {
-		this.setState((prevState) => {
-			return { showSideDrawer: !prevState.showSideDrawer };
-		});
-	};
+  sideDrawerToggleHandler = () => {
+    this.setState(prevState => {
+      return { showSideDrawer: !prevState.showSideDrawer }
+    })
+  }
 
-	render() {
-		return (
-			<Aux>
-				<Toolbar drawerToggleClicked={this.sideDrawerToggleHandler} />
-				<SideDrawer
-					open={this.state.showSideDrawer}
-					closed={this.sideDrawerCloseHandler}
-				/>
-				<main className={classes.Content}>{this.props.children}</main>
-			</Aux>
-		);
-	}
+  render() {
+    return (
+      <Aux>
+        <Toolbar
+          drawerToggleClicked={this.sideDrawerToggleHandler}
+          isAuth={this.props.isAuthenticated}
+        />
+        <SideDrawer
+          open={this.state.showSideDrawer}
+          closed={this.sideDrawerCloseHandler}
+          isAuth={this.props.isAuthenticated}
+        />
+        <main className={classes.Content}>{this.props.children}</main>
+      </Aux>
+    )
+  }
 }
 
-export default Layout;
+const mapStateToProps = state => {
+  return {
+    isAuthenticated: state.auth.token !== null,
+  }
+}
+
+export default connect(mapStateToProps)(Layout)
